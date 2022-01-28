@@ -232,7 +232,7 @@
         <div class="get__in__touch__text smaller">FILL OUT THE FORM BELOW</div>
       </div>
       <div class="w-form">
-        <form id="email-form" name="email-form" data-name="Email Form" method="get"><label for="name" class="field__label">Your Name</label><input type="text" class="text__field w-input" maxlength="256" name="name" data-name="Name" placeholder="Awesome Client" id="name" required=""><label for="email" class="field__label">Your Email Address</label><input type="email" class="text__field w-input" maxlength="256" name="email" data-name="Email" placeholder="client@email.com" id="email" required=""><label for="field" class="field__label">Tell Me About Your Project</label><textarea placeholder="I have a great idea" maxlength="5000" id="field" name="field" required="" data-name="field" class="textarea w-input"></textarea><input type="submit" value="Submit" data-wait="Please wait..." class="submit-button w-button"></form>
+        <form id="email-form" action="https://formspree.io/f/xoqrevqn" method="POST" name="email-form" data-name="Email Form"><label for="name" class="field__label">Your Name</label><input type="text" class="text__field w-input" maxlength="256" name="name" data-name="Name" placeholder="Awesome Client" id="name" required=""><label for="email" class="field__label">Your Email Address</label><input type="email" class="text__field w-input" maxlength="256" name="email" data-name="Email" placeholder="client@email.com" id="email" required=""><label for="field" class="field__label">Tell Me About Your Project</label><textarea placeholder="I have a great idea" maxlength="5000" id="field" name="field" required="" data-name="field" class="textarea w-input"></textarea><input type="submit" value="Submit" data-wait="Please wait..." class="submit-button w-button"></form>
         <div class="w-form-done">
           <div class="text-block-2">Thank you! Your submission has been received!</div>
         </div>
@@ -259,6 +259,39 @@
   function delay(URL) {
      setTimeout( function () {window.location = URL}, 1500);
   }
+
+  var form = document.getElementById("email-form");
+    
+    async function handleSubmit(event) {
+      event.preventDefault();
+      var success__status = document.querySelector(".w-form-done");
+      var fail__status = document.querySelector(".w-form-fail");
+      var data = new FormData(event.target);
+      fetch(event.target.action, {
+        method: form.method,
+        body: data,
+        headers: {
+            'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          form.style.display = "none";
+          success__status.style.display = "block";
+          form.reset()
+        } else {
+          response.json().then(data => {
+            if (Object.hasOwn(data, 'errors')) {
+              fail__status.style.display = "block";
+            } else {
+              fail__status.style.display = "block";
+            }
+          })
+        }
+      }).catch(error => {
+        fail__status.style.display = "block";
+      });
+    }
+    form.addEventListener("submit", handleSubmit)
 </script>
 </body>
 </html>
